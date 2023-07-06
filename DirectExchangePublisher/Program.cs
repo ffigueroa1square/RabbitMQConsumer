@@ -12,11 +12,14 @@ internal static class Program
         };
         using var connection = factory.CreateConnection();
         using var channel = connection.CreateModel();
-        channel.QueueDeclare(queue: "demo-queue",
+        channel.ExchangeDeclare(exchange: "ex.direct", type: ExchangeType.Direct);
+        channel.QueueDeclare(queue: "q.direct",
             durable: true,
             exclusive: false,
             autoDelete: false,
             arguments: null);
+        channel.QueueBind(queue: "q.direct", exchange: "ex.direct", routingKey: "myBindingKey");        
+
         var consumer = new EventingBasicConsumer(channel);
         consumer.Received += (sender, e) =>
         {
@@ -25,7 +28,7 @@ internal static class Program
             Console.WriteLine(message);
         };
 
-        channel.BasicConsume(queue: "demo-queue", autoAck: true, consumer: consumer);
+        channel.BasicConsume(queue: "q.direct", autoAck: true, consumer: consumer);
         Console.WriteLine("Consumer started");
         Console.ReadLine();
     }
