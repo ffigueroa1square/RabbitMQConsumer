@@ -4,15 +4,19 @@ using System.Text;
 
 namespace RabbitMQ.Consumer
 {
-    public static class SimpleQueueConsumer
+    public class FanoutExchangeConsumer
     {
         public static void Consume(IModel channel)
         {
-            channel.QueueDeclare(queue: "demo-queue",
-            durable: true,
-            exclusive: false,
-            autoDelete: false,
-            arguments: null);
+            channel.ExchangeDeclare(exchange: "ex.events", type: ExchangeType.Fanout);
+
+            // we will create a queue provided by RabbitMQ, it will contain a random queue name like amq.gen-JzTY20BRgKO-HjmUJj0wLg
+            // we create a non-durable, exclusive, autodelete queue
+            var queueName = channel.QueueDeclare().QueueName;            
+
+            channel.QueueBind(queue: queueName,
+                exchange: "ex.events",
+                routingKey: string.Empty);
 
             Console.WriteLine(" [*] Waiting for messages.");
 
@@ -24,7 +28,7 @@ namespace RabbitMQ.Consumer
                 Console.WriteLine($" [x] {message}");
             };
 
-            channel.BasicConsume(queue: "demo-queue", autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
             Console.WriteLine(" Press [enter] to exit.");
             Console.ReadLine();
         }

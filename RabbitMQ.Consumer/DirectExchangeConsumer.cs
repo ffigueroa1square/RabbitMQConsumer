@@ -16,16 +16,18 @@ namespace RabbitMQ.Consumer
                 arguments: null);
             channel.QueueBind(queue: "q.direct", exchange: "ex.direct", routingKey: "myBindingKey");
 
+            Console.WriteLine(" [*] Waiting for messages.");
+
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (sender, e) =>
             {
                 var body = e.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine(message);
+                Console.WriteLine($" [x] {message}");
             };
 
             channel.BasicConsume(queue: "q.direct", autoAck: true, consumer: consumer);
-            Console.WriteLine("Consumer started");
+            Console.WriteLine(" Press [enter] to exit.");
             Console.ReadLine();
         }
     }
