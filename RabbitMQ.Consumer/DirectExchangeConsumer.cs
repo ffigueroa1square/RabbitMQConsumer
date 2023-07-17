@@ -8,13 +8,17 @@ namespace RabbitMQ.Consumer
     {
         public static void Consume(IModel channel)
         {
-            channel.ExchangeDeclare(exchange: "ex.direct", type: ExchangeType.Direct);
-            channel.QueueDeclare(queue: "q.direct",
+            var exchangeName = "ex.direct";
+            var queueName = "q.direct";
+            var routingKey = "myBindingKey";
+
+            channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Direct);
+            channel.QueueDeclare(queue: queueName,
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
                 arguments: null);
-            channel.QueueBind(queue: "q.direct", exchange: "ex.direct", routingKey: "myBindingKey");
+            channel.QueueBind(queue: queueName, exchange: exchangeName, routingKey: routingKey);
 
             Console.WriteLine(" [*] Waiting for messages.");
 
@@ -26,7 +30,7 @@ namespace RabbitMQ.Consumer
                 Console.WriteLine($" [x] {message}");
             };
 
-            channel.BasicConsume(queue: "q.direct", autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
             Console.WriteLine(" Press [enter] to exit.");
             Console.ReadLine();
         }

@@ -16,6 +16,8 @@ namespace RabbitMQ.Consumer
             autoDelete: false,
             arguments: null);
 
+            channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
+
             Console.WriteLine(" [*] Waiting for messages.");
 
             var consumer = new EventingBasicConsumer(channel);
@@ -23,10 +25,17 @@ namespace RabbitMQ.Consumer
             {
                 var body = e.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine($" [x] {message}");
+                Console.WriteLine($" [x] Received {message}");
+
+                int dots = message.Split('.').Length - 1;
+                Thread.Sleep(dots * 1000);
+
+                Console.WriteLine(" [x] Done");
+
+                channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
             };
 
-            channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+            channel.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
             Console.WriteLine(" Press [enter] to exit.");
             Console.ReadLine();
         }
