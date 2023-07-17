@@ -16,8 +16,9 @@ internal static class Program
         // uncomment the rabbitmq pattern you want to use
         */
 
-        //SimpleQueueConsumer.Consume(channel);
+        SimpleQueueConsumer.Consume(channel);
         //DirectExchangeConsumer.Consume(channel);
-        FanoutExchangeConsumer.Consume(channel);
+        //WorkQueuesConsumer.Consume(channel);
+        //FanoutExchangeConsumer.Consume(channel);
     }
 }

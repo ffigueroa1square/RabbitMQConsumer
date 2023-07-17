@@ -4,11 +4,11 @@ using System.Text;
 
 namespace RabbitMQ.Consumer
 {
-    public static class SimpleQueueConsumer
+    public static class WorkQueuesConsumer
     {
         public static void Consume(IModel channel)
-        {            
-            var queueName = "demo-queue";
+        {
+            var queueName = "q.workQueue";
 
             channel.QueueDeclare(queue: queueName,
             durable: true,

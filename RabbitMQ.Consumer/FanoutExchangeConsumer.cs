@@ -8,15 +8,17 @@ namespace RabbitMQ.Consumer
     {
         public static void Consume(IModel channel)
         {
-            channel.ExchangeDeclare(exchange: "ex.events", type: ExchangeType.Fanout);
+            var exchangeName = "ex.fanout";
 
             // we will create a queue provided by RabbitMQ, it will contain a random queue name like amq.gen-JzTY20BRgKO-HjmUJj0wLg
             // we create a non-durable, exclusive, autodelete queue
-            var queueName = channel.QueueDeclare().QueueName;            
+            var queueName = channel.QueueDeclare().QueueName;
+
+            channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Fanout);           
 
             channel.QueueBind(queue: queueName,
-                exchange: "ex.events",
-                routingKey: string.Empty);
+                exchange: exchangeName,
+                routingKey: string.Empty);            
 
             Console.WriteLine(" [*] Waiting for messages.");
 
