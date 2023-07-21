@@ -21,6 +21,7 @@ internal static class Program
         //WorkQueuesConsumer.Consume(channel);
         //FanoutExchangeConsumer.Consume(channel);
         //RoutingConsumer.Consume(channel);
-        TopicsExchangeConsumer.Consume(channel);
+        //TopicsExchangeConsumer.Consume(channel);
+        HeadersExchangeConsumer.Consume(channel);
     }
 }
