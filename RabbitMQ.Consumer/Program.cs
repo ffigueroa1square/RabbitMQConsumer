@@ -22,6 +22,7 @@ internal static class Program
         //FanoutExchangeConsumer.Consume(channel);
         //RoutingConsumer.Consume(channel);
         //TopicsExchangeConsumer.Consume(channel);
-        HeadersExchangeConsumer.Consume(channel);
+        //HeadersExchangeConsumer.Consume(channel);
+        RPCConsumer.Consume(channel);
     }
 }
